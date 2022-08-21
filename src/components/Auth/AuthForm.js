@@ -19,6 +19,29 @@ const AuthForm = () => {
     setLoading(true)
 
     if(isLogin) {
+      fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBTDKhub2HFtP43AtHuJENxi-RF0CS8Yds', {
+        method: 'POST',
+        body: JSON.stringify({
+          email: enteredEmail,
+          password: enteredPassword,
+          returnSecureToken: true
+      }),
+      headers:{ 
+        'Content-Type': 'application/json'
+     }
+      })
+      .then( res => {
+        setLoading(false)
+        if(res.ok) {
+          res.json().then(data => localStorage.setItem('tokonId',data.localId))
+
+        } else {
+          return res.json().then(data => {
+            alert(data.error.message);
+          });
+        }
+      }
+      )
 
     } else {
       fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBTDKhub2HFtP43AtHuJENxi-RF0CS8Yds', {
