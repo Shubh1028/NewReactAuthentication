@@ -1,8 +1,12 @@
-import { useState, useRef} from 'react';
+import { useState, useRef, useContext} from 'react';
 
 import classes from './AuthForm.module.css';
+import AuthContext from '../../store/auth-context';
 
 const AuthForm = () => {
+
+  const authCtx = useContext(AuthContext)
+
   const fetchEmailRef = useRef();
   const fetchpasswordRef = useRef();
   const [isLogin, setIsLogin] = useState(true);
@@ -33,7 +37,7 @@ const AuthForm = () => {
       .then( res => {
         setLoading(false)
         if(res.ok) {
-          res.json().then(data => localStorage.setItem('tokonId',data.localId))
+          res.json().then(data => authCtx.login(data.idToken))
 
         } else {
           return res.json().then(data => {
@@ -84,7 +88,7 @@ const AuthForm = () => {
         </div>
         <div className={classes.actions}>
          {!isLoading && <button>{isLogin ? 'Login' : 'Create Account'}</button> }
-          {isLoading && <p>Loading..</p>}
+          {isLoading && <p>Loading...</p>}
           <button
             type='button'
             className={classes.toggle}
